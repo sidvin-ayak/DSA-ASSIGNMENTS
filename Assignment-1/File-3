@@ -1,0 +1,92 @@
+//Program to search for an element in an array
+
+#include <stdio.h>
+#include "sort.h"
+
+//Function to search for a given element in an array using Linear Search
+
+
+int linearSearch(int arr[], int size, int key){
+    for (int i=0;i<size;i++){
+        if (arr[i]==key){
+            return i;
+        }
+    }
+    return -1;
+}
+
+//Function to search for a given element in an array using Binary Search
+
+int binarySearch(int arr[], int size, int key){
+    int left=0, right=size-1;
+    while (left <= right){
+        int midElement = left + (right-left)/2;
+        if (arr[midElement]==key){
+            return midElement;
+        }
+        else if (arr[midElement]<key){
+            left=midElement+1;
+        }
+        else{
+            right=midElement-1;
+        }
+    }
+    return -1;
+}
+
+int main(){
+    int choice,size,key,result;
+    printf("Enter the number of elements: ");
+    scanf("%d",&size);
+    int arr[size];
+    printf("Enter the elements: ");
+    for (int i=0;i<size;i++){
+        scanf("%d",&arr[i]);
+    }
+    
+    while(1){
+        printf("\nSelect your sort type: \n");
+        printf("1. Linear Search\n");
+        printf("2. Binary Search\n");
+        printf("3. Exit\n");
+        printf("\nEnter your choice: \n");
+        scanf("%d",&choice);
+        printf("\n");
+
+        switch(choice){
+            case 1:
+            printf("Enter the element to search: ");
+            scanf("%d",&key);
+            result = linearSearch(arr,size,key);
+            if (result != -1){
+                printf("Key found at index: %d\n",result);
+            }
+            else{
+                printf("Key not found. \n");
+            }
+            break;
+
+            case 2:
+            bubbleSort(arr,size);
+            printArray(arr,size);
+            printf("Enter the element to search: ");
+            scanf("%d",&key);
+            result = binarySearch(arr,size,key);
+            if (result != -1){
+                printf("Key found at index: %d\n",result);
+            }
+            else{
+                printf("Key not found. \n");
+            }
+            break;
+
+            case 3:
+            printf("Exiting the program...\n");
+            return -1;
+            break;
+
+            default:
+            printf("Invalid choice");
+        }
+    }
+}
