@@ -1,0 +1,112 @@
+// -----------------------------------------------------------------------------
+// Company-Grade C++ Program using OOP to calculate areas and volumes
+// Author: [Your Name]
+// Filename: class_menu.cpp
+// -----------------------------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+
+// Class representing 2D and 3D shapes
+class Shape {
+private:
+    float length, breadth, height;
+
+public:
+    // Constructor for square/cube
+    Shape(float l) {
+        length = l;
+        breadth = height = 0;
+    }
+
+    // Constructor for rectangle/cuboid
+    Shape(float l, float b, float h = 0) {
+        length = l;
+        breadth = b;
+        height = h;
+    }
+
+    float areaSquare() {
+        return length * length;
+    }
+
+    float areaRectangle() {
+        return length * breadth;
+    }
+
+    float volumeCube() {
+        return length * length * length;
+    }
+
+    float volumeCuboid() {
+        return length * breadth * height;
+    }
+};
+
+int main() {
+    char choice;
+    float l, b, h;
+
+    do {
+        cout << "\nMenu:\n"
+             << "a) Square\n"
+             << "b) Cube\n"
+             << "c) Rectangle\n"
+             << "d) Cuboid\n"
+             << "e) Exit\n"
+             << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 'a':
+                cout << "Enter side of square: ";
+                cin >> l;
+                if (l <= 0) {
+                    cout << "Invalid side length.\n";
+                    break;
+                }
+                cout << "Area of square: " << Shape(l).areaSquare() << endl;
+                break;
+
+            case 'b':
+                cout << "Enter side of cube: ";
+                cin >> l;
+                if (l <= 0) {
+                    cout << "Invalid side length.\n";
+                    break;
+                }
+                cout << "Volume of cube: " << Shape(l).volumeCube() << endl;
+                break;
+
+            case 'c':
+                cout << "Enter length and breadth: ";
+                cin >> l >> b;
+                if (l <= 0 || b <= 0) {
+                    cout << "Invalid dimensions.\n";
+                    break;
+                }
+                cout << "Area of rectangle: " << Shape(l, b).areaRectangle() << endl;
+                break;
+
+            case 'd':
+                cout << "Enter length, breadth and height: ";
+                cin >> l >> b >> h;
+                if (l <= 0 || b <= 0 || h <= 0) {
+                    cout << "Invalid dimensions.\n";
+                    break;
+                }
+                cout << "Volume of cuboid: " << Shape(l, b, h).volumeCuboid() << endl;
+                break;
+
+            case 'e':
+                cout << "Exiting program.\n";
+                break;
+
+            default:
+                cout << "Invalid option.\n";
+        }
+
+    } while (choice != 'e');
+
+    return 0;
+}
