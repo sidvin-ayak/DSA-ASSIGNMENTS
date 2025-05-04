@@ -1,0 +1,93 @@
+// -----------------------------------------------------------------------------
+// Company-Grade C++ Program using DMA to check Palindrome, Armstrong, Perfect
+// Author: [Your Name]
+// Filename: pointer_menu.cpp
+// -----------------------------------------------------------------------------
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// Function to check Palindrome
+bool isPalindrome(int* num) {
+    int original = *num, reversed = 0;
+    while (*num > 0) {
+        reversed = reversed * 10 + (*num % 10);
+        *num /= 10;
+    }
+    *num = original; // Restore original value
+    return (original == reversed);
+}
+
+// Function to check Armstrong Number
+bool isArmstrong(int* num) {
+    int original = *num, sum = 0, digits = 0;
+    int temp = original;
+
+    // Count digits
+    while (temp) {
+        digits++;
+        temp /= 10;
+    }
+
+    temp = original;
+    while (temp) {
+        sum += pow(temp % 10, digits);
+        temp /= 10;
+    }
+
+    return (original == sum);
+}
+
+// Function to check Perfect Number
+bool isPerfect(int* num) {
+    int sum = 0;
+    for (int i = 1; i < *num; ++i) {
+        if (*num % i == 0)
+            sum += i;
+    }
+    return (sum == *num);
+}
+
+int main() {
+    char choice;
+    do {
+        cout << "\nMenu:\n"
+             << "a) Palindrome\n"
+             << "b) Armstrong Number\n"
+             << "c) Perfect Number\n"
+             << "d) Exit\n"
+             << "Enter your choice: ";
+        cin >> choice;
+
+        if (choice >= 'a' && choice <= 'c') {
+            int* number = new int;
+            cout << "Enter a positive integer: ";
+            cin >> *number;
+
+            if (*number <= 0) {
+                cout << "Invalid input. Please enter a positive integer.\n";
+                delete number;
+                continue;
+            }
+
+            switch (choice) {
+                case 'a':
+                    cout << (*isPalindrome(number) ? "Palindrome" : "Not a Palindrome") << endl;
+                    break;
+                case 'b':
+                    cout << (*isArmstrong(number) ? "Armstrong Number" : "Not an Armstrong Number") << endl;
+                    break;
+                case 'c':
+                    cout << (*isPerfect(number) ? "Perfect Number" : "Not a Perfect Number") << endl;
+                    break;
+            }
+
+            delete number;
+        }
+
+    } while (choice != 'd');
+
+    cout << "Program exited successfully.\n";
+    return 0;
+}
