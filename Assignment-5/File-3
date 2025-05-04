@@ -1,0 +1,146 @@
+#include <iostream>
+using namespace std;
+
+// Node structure for circular linked list representing processes
+struct Node {
+    int processTime;  // Time required by the process
+    Node* next;      // Pointer to the next node (next process)
+};
+
+// Class representing the circular linked list (Queue for processes)
+class CircularQueue {
+private:
+    Node* head;
+    Node* tail;
+    int timeSlice;  // Time slice for round-robin execution
+
+public:
+    // Constructor to initialize the queue and set the time slice
+    CircularQueue(int slice) {
+        head = tail = nullptr;
+        timeSlice = slice;
+    }
+
+    // Function to insert a new process with a given time
+    void insertProcess(int time) {
+        Node* newNode = new Node();
+        newNode->processTime = time;
+        newNode->next = nullptr;
+
+        if (head == nullptr) {
+            head = tail = newNode;
+            tail->next = head;  // Make it circular
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+            tail->next = head;  // Make it circular
+        }
+    }
+
+    // Function to execute the round-robin scheduling
+    void execute() {
+        if (head == nullptr) {
+            cout << "No processes in the queue to execute." << endl;
+            return;
+        }
+
+        Node* current = head;
+        // Execute process, subtract the time slice, and decide next steps
+        do {
+            // Subtract the time slice from the process time
+            current->processTime -= timeSlice;
+
+            if (current->processTime <= 0) {
+                // If the process is complete (time <= 0), remove it from the queue
+                cout << "Process completed. Time taken: " << current->processTime + timeSlice << endl;
+                if (current == head) {
+                    head = head->next;  // If it's the head, move head to the next node
+                    tail->next = head;  // Update tail's next pointer to head
+                } else if (current == tail) {
+                    tail = head;  // If it's the tail, update tail to the new last node
+                    tail->next = head;
+                } else {
+                    Node* temp = head;
+                    while (temp->next != current) {
+                        temp = temp->next;
+                    }
+                    temp->next = current->next;
+                }
+                delete current;
+                current = head;  // Start again from head after deletion
+            } else {
+                // If process is not completed, move it to the end of the queue with remaining time
+                cout << "Process with remaining time: " << current->processTime << endl;
+                tail = current;  // Move the tail to the current process
+                head = current->next;  // Move the head to the next process in the queue
+                tail->next = head;  // Maintain circular structure
+                current = head;  // Proceed to next process
+            }
+        } while (head != nullptr);
+    }
+
+    // Function to display all processes in the queue
+    void display() {
+        if (head == nullptr) {
+            cout << "Queue is empty." << endl;
+            return;
+        }
+
+        Node* current = head;
+        cout << "Processes in the queue: ";
+        do {
+            cout << current->processTime << " ";
+            current = current->next;
+        } while (current != head);
+        cout << endl;
+    }
+
+    // Destructor to delete all processes and free memory
+    ~CircularQueue() {
+        while (head != nullptr) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+};
+
+int main() {
+    int timeSlice;
+    cout << "Enter the fixed time slice for round-robin scheduling: ";
+    cin >> timeSlice;
+
+    CircularQueue queue(timeSlice);
+
+    int choice, processTime;
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Insert Process\n";
+        cout << "2. Execute\n";
+        cout << "3. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter the process time: ";
+                cin >> processTime;
+                queue.insertProcess(processTime);
+                break;
+            case 2:
+                queue.execute();
+                break;
+            case 3:
+                cout << "Exiting...\n";
+                break;
+            default:
+                cout << "Invalid choice, please try again.\n";
+        }
+
+        // Optionally display the current processes in the queue after each operation
+        queue.display();
+
+    } while (choice != 3);
+
+    return 0;
+}
